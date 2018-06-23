@@ -19,24 +19,30 @@ class Niik {
     public static function startWithString(cssString: String) {
         var protosplitted = cssString.split("}");
         protosplitted.remove("");
-        var splitted = protosplitted.map(
+        var parsedRules: Array<CSSRuleset> = protosplitted.map(
             function(s: String) {
                 var sp = s.split("{");
-                var rlst = new CSSRuleset();
-                trace("sp is " + sp);
                 var rawrules = sp.pop();
                 var rawselectors = sp.pop();
-                trace("sp now is " + sp);
                 var newSelectors = rawselectors.split(",").map(function(a) return a.replace("\n", "")).map(StringTools.trim);
                 newSelectors.remove("");
                 var newRules = rawrules.split(";").map(function(a) return a.replace("\n", "")).map(StringTools.trim);
                 newRules.remove("");
                 newRules.remove("\n");
 
-                return [newRules, newSelectors];
+                var newerRules = newRules.map(
+                    function(s) {
+                        var a = s.replace(" ", "").split(":");
+                        return {funcname: a.pop(), eventname: a.pop()};
+                    }
+                );
+                return {
+                    selectors: newSelectors,
+                    rules: newerRules,
+                    };
             }
         );
-        trace(splitted);
+        trace(parsedRules);
         return cssString;
     }
 
@@ -48,8 +54,5 @@ class Niik {
     }
 }
 
-class CSSRuleset {
-    public var selectors: Array<String>;
-    public var rules: Array<{rule: String, funcName: String}>;
-    public function new() {};
-}
+typedef CSSRule = {eventname: String, funcname: String};
+typedef CSSRuleset = {selectors: Array<String>, rules: Array<CSSRule>};

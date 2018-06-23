@@ -5,13 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script>
     function testa(event) {
-        console.log("Hello!");
-        alert("Hello " + event);
+        console.log("thing a was");
+        console.log(event);
     }
 
     function testb(event) {
-        console.log("Hello New!");
+        console.log("thing b was");
+        console.log(event);
     }
+
+    function testc(event) {
+        console.log("thing c was");
+        console.log(event);
+    }
+
+    function testd(event) {
+        console.log("thing d was");
+        console.log(event);
+    }
+
 </script>
 <script src="niik-standalone.js" data-bindings-src="test-bindings.css"></script>
 <script>Niik.startWithSRC("test-bindings.css");</script>
@@ -19,7 +31,9 @@
 </head>
 <body>
     <p id="test-a">Hello World!</p>
-    <div class="test-b"><button type="button">Clickers A!</button></div>
+    <div class="test-b"><button type="button">Clickers A!</button><button type="button">Clickers A!</button></div>
     <div class="test-c"><button type="button">Clickers B!</button></div>
+    <div class="test-c"><button type="button">Clickers B!</button></div>
+    <div class="test-e"><button type="button">Clickers C!</button></div>
     <div class="test-b test-c"><input type="text" value="Prepop!"></div>
 </body>

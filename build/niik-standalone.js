@@ -41,13 +41,10 @@ Niik.__name__ = true;
 Niik.startWithString = function(cssString) {
 	var protosplitted = cssString.split("}");
 	HxOverrides.remove(protosplitted,"");
-	var splitted = protosplitted.map(function(s) {
+	var parsedRules = protosplitted.map(function(s) {
 		var sp = s.split("{");
-		var rlst = new CSSRuleset();
-		console.log("sp is " + Std.string(sp));
 		var rawrules = sp.pop();
 		var rawselectors = sp.pop();
-		console.log("sp now is " + Std.string(sp));
 		var newSelectors = rawselectors.split(",").map(function(a) {
 			return StringTools.replace(a,"\n","");
 		}).map(StringTools.trim);
@@ -57,9 +54,13 @@ Niik.startWithString = function(cssString) {
 		}).map(StringTools.trim);
 		HxOverrides.remove(newRules,"");
 		HxOverrides.remove(newRules,"\n");
-		return [newRules,newSelectors];
+		var newerRules = newRules.map(function(s1) {
+			var a2 = StringTools.replace(s1," ","").split(":");
+			return { funcname : a2.pop(), eventname : a2.pop()};
+		});
+		return { selectors : newSelectors, rules : newerRules};
 	});
-	console.log(splitted);
+	console.log(parsedRules);
 	return cssString;
 };
 Niik.startWithSRC = function(srcString) {
@@ -68,12 +69,6 @@ Niik.startWithSRC = function(srcString) {
 	}).then(function(a1) {
 		Niik.startWithString(a1);
 	});
-};
-var CSSRuleset = function() {
-};
-CSSRuleset.__name__ = true;
-CSSRuleset.prototype = {
-	__class__: CSSRuleset
 };
 var Std = function() { };
 Std.__name__ = true;

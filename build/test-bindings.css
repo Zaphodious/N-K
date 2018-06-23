@@ -8,6 +8,11 @@
     click: testb;
 }
 
+.test-e button {
+    click: testd;
+    mousemove: testc;
+}
+
 .test-c input {
-    change: testa;
+    change: testc;
 }
