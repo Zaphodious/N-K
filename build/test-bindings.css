@@ -1,0 +1,13 @@
+#test-a {
+    mousemove: testa;
+}
+.test-b button {
+    click: testa;
+}
+.test-b button, .test-c button {
+    click: testb;
+}
+
+.test-c input {
+    change: testa;
+}

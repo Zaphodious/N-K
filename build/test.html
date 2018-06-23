@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+    function testa(event) {
+        console.log("Hello!");
+        alert("Hello " + event);
+    }
+
+    function testb(event) {
+        console.log("Hello New!");
+    }
+</script>
+<script src="niik-standalone.js" data-bindings-src="test-bindings.css"></script>
+<script>Niik.startWithSRC("test-bindings.css");</script>
+<title>Niik test</title>
+</head>
+<body>
+    <p id="test-a">Hello World!</p>
+    <div class="test-b"><button type="button">Clickers A!</button></div>
+    <div class="test-c"><button type="button">Clickers B!</button></div>
+    <div class="test-b test-c"><input type="text" value="Prepop!"></div>
+</body>

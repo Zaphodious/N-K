@@ -1,0 +1,4 @@
+-cp src/
+#-dce full
+Niik
+-js build/niik-standalone.js
