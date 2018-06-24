@@ -4,6 +4,7 @@ import js.Browser;
 import js.Browser.document;
 import js.Browser.window;
 import js.html.Event;
+import js.html.Element;
 import js.html.Response;
 import js.Promise;
 import js.Lib;
@@ -55,6 +56,29 @@ class Niik {
         return this;
     }
 
+    public function addHandlersToElement(element: Element): Niik {
+        for (ruleset in rulesets) {
+            for (selector in ruleset.selectors) {
+                if (element.matches(selector)) {
+                    for (rule in ruleset.rules) {
+                        element.addEventListener(rule.eventname, handlerRegistry[rule.funcname]);
+                    }
+                }
+            }
+        }
+        return this;
+    }
+
+    public function removeHandlersFromElement(element: Element): Niik {
+        for (ruleset in rulesets) {
+            for (selector in ruleset.selectors) {
+                for (rule in ruleset.rules) {
+                    element.removeEventListener(rule.eventname, handlerRegistry[rule.funcname]);
+                }
+            }
+        }
+        return this;
+    }
 
     public function bindRulesToDOM() {
         for (ruleset in rulesets) {

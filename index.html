@@ -3,7 +3,7 @@
 <head>
 <meta charset=utf-8>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<script src="niik-standalone.js" data-bindings-src="test-bindings.css"></script>
+<script src="build/niik-standalone.js"></script>
 <script>
     var niik = new Niik()
     .addHandler("testa", function (event) {
@@ -23,7 +23,7 @@
         console.log("thing d was");
         console.log(event);
     });
-    niik.startWithSRC("test-bindings.css");
+    niik.startWithSRC("build/test-bindings.css");
 
 </script>
 <script></script>
