@@ -35,10 +35,30 @@ HxOverrides.remove = function(a,obj) {
 	a.splice(i,1);
 	return true;
 };
+HxOverrides.iter = function(a) {
+	return { cur : 0, arr : a, hasNext : function() {
+		return this.cur < this.arr.length;
+	}, next : function() {
+		return this.arr[this.cur++];
+	}};
+};
 Math.__name__ = true;
-var Niik = $hx_exports["Niik"] = function() { };
+var Niik = $hx_exports["Niik"] = function() {
+	this.rulesets = [];
+	var _g = new haxe_ds_StringMap();
+	var value = Niik.foo;
+	if(__map_reserved["niikSample"] != null) {
+		_g.setReserved("niikSample",value);
+	} else {
+		_g.h["niikSample"] = value;
+	}
+	this.handlerRegistry = _g;
+};
 Niik.__name__ = true;
-Niik.startWithString = function(cssString) {
+Niik.foo = function(event) {
+	console.log("foo you too!");
+};
+Niik.parseCSS = function(cssString) {
 	var protosplitted = cssString.split("}");
 	HxOverrides.remove(protosplitted,"");
 	var parsedRules = protosplitted.map(function(s) {
@@ -50,7 +70,7 @@ Niik.startWithString = function(cssString) {
 		}).map(StringTools.trim);
 		HxOverrides.remove(newSelectors,"");
 		var newRules = rawrules.split(";").map(function(a1) {
-			return StringTools.replace(a1,"\n","");
+			return StringTools.replace(StringTools.replace(a1,"\n",""),"\"","");
 		}).map(StringTools.trim);
 		HxOverrides.remove(newRules,"");
 		HxOverrides.remove(newRules,"\n");
@@ -60,15 +80,82 @@ Niik.startWithString = function(cssString) {
 		});
 		return { selectors : newSelectors, rules : newerRules};
 	});
-	console.log(parsedRules);
-	return cssString;
+	return parsedRules;
 };
-Niik.startWithSRC = function(srcString) {
-	window.fetch(srcString).then(function(a) {
-		return a.text();
-	}).then(function(a1) {
-		Niik.startWithString(a1);
-	});
+Niik.prototype = {
+	startWithString: function(cssString) {
+		this.rulesets = Niik.parseCSS(cssString);
+		this.bindRulesToDOM();
+		console.log(this.handlerRegistry.toString());
+		return this;
+	}
+	,startWithSRC: function(srcString) {
+		var _gthis = this;
+		return window.fetch(srcString).then(function(a) {
+			return a.text();
+		}).then(function(a1) {
+			return _gthis.startWithString(a1);
+		});
+	}
+	,addHandler: function(name,fun) {
+		var _this = this.handlerRegistry;
+		if(__map_reserved[name] != null) {
+			_this.setReserved(name,fun);
+		} else {
+			_this.h[name] = fun;
+		}
+		return this;
+	}
+	,addHandlers: function(newHandlers) {
+		var handlerkey = newHandlers.keys();
+		while(handlerkey.hasNext()) {
+			var handlerkey1 = handlerkey.next();
+			var this1 = this.handlerRegistry;
+			var v = __map_reserved[handlerkey1] != null ? newHandlers.getReserved(handlerkey1) : newHandlers.h[handlerkey1];
+			var _this = this1;
+			if(__map_reserved[handlerkey1] != null) {
+				_this.setReserved(handlerkey1,v);
+			} else {
+				_this.h[handlerkey1] = v;
+			}
+		}
+		return this;
+	}
+	,bindRulesToDOM: function() {
+		var _g = 0;
+		var _g1 = this.rulesets;
+		while(_g < _g1.length) {
+			var ruleset = _g1[_g];
+			++_g;
+			console.log(ruleset);
+			var _g2 = 0;
+			var _g3 = ruleset.selectors;
+			while(_g2 < _g3.length) {
+				var selector = _g3[_g2];
+				++_g2;
+				var _g4 = 0;
+				var _g5 = window.document.querySelectorAll(selector);
+				while(_g4 < _g5.length) {
+					var element = _g5[_g4];
+					++_g4;
+					var _g6 = 0;
+					var _g7 = ruleset.rules;
+					while(_g6 < _g7.length) {
+						var rule = _g7[_g6];
+						++_g6;
+						var key = rule.funcname;
+						var _this = this.handlerRegistry;
+						element.addEventListener(rule.eventname,__map_reserved[key] != null ? _this.getReserved(key) : _this.h[key]);
+						var key1 = rule.funcname;
+						var _this1 = this.handlerRegistry;
+						console.log(__map_reserved[key1] != null ? _this1.getReserved(key1) : _this1.h[key1]);
+						console.log(rule);
+					}
+				}
+			}
+		}
+	}
+	,__class__: Niik
 };
 var Std = function() { };
 Std.__name__ = true;
@@ -110,6 +197,67 @@ StringTools.trim = function(s) {
 };
 StringTools.replace = function(s,sub,by) {
 	return s.split(sub).join(by);
+};
+var haxe_IMap = function() { };
+haxe_IMap.__name__ = true;
+var haxe_ds_StringMap = function() {
+	this.h = { };
+};
+haxe_ds_StringMap.__name__ = true;
+haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
+haxe_ds_StringMap.prototype = {
+	setReserved: function(key,value) {
+		if(this.rh == null) {
+			this.rh = { };
+		}
+		this.rh["$" + key] = value;
+	}
+	,getReserved: function(key) {
+		if(this.rh == null) {
+			return null;
+		} else {
+			return this.rh["$" + key];
+		}
+	}
+	,keys: function() {
+		return HxOverrides.iter(this.arrayKeys());
+	}
+	,arrayKeys: function() {
+		var out = [];
+		for( var key in this.h ) {
+		if(this.h.hasOwnProperty(key)) {
+			out.push(key);
+		}
+		}
+		if(this.rh != null) {
+			for( var key in this.rh ) {
+			if(key.charCodeAt(0) == 36) {
+				out.push(key.substr(1));
+			}
+			}
+		}
+		return out;
+	}
+	,toString: function() {
+		var s_b = "";
+		s_b += "{";
+		var keys = this.arrayKeys();
+		var _g1 = 0;
+		var _g = keys.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var k = keys[i];
+			s_b += k == null ? "null" : "" + k;
+			s_b += " => ";
+			s_b += Std.string(Std.string(__map_reserved[k] != null ? this.getReserved(k) : this.h[k]));
+			if(i < keys.length - 1) {
+				s_b += ", ";
+			}
+		}
+		s_b += "}";
+		return s_b;
+	}
+	,__class__: haxe_ds_StringMap
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -435,6 +583,7 @@ var Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
+var __map_reserved = {};
 var ArrayBuffer = $global.ArrayBuffer || js_html_compat_ArrayBuffer;
 if(ArrayBuffer.prototype.slice == null) {
 	ArrayBuffer.prototype.slice = js_html_compat_ArrayBuffer.sliceImpl;

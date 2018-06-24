@@ -13,10 +13,66 @@ import StringTools;
 using String;
 using StringTools;
 
-@:expose
+@:expose("Niik")
 class Niik {
 
-    public static function startWithString(cssString: String) {
+    public var handlerRegistry: HandlerRegistry 
+        = ["niikSample" => Niik.foo];
+    
+    public var rulesets: Array<CSSRuleset> = [];
+
+    private function new() {}
+
+    public function startWithString(cssString: String) : Niik {
+        rulesets = Niik.parseCSS(cssString);
+        bindRulesToDOM();
+
+
+        trace(handlerRegistry);
+        return this;
+    }
+
+    public static function foo(event: Event) {
+        trace("foo you too!");
+    }
+
+
+    public function startWithSRC(srcString: String) : Promise<Niik> {
+        return window.fetch(srcString)
+            .then(function(a) {return a.text();})
+            .then(function(a) {return startWithString(a);});
+    }
+
+    public function addHandler(name: String, fun: Event -> Void) : Niik {
+        handlerRegistry[name] = fun;
+        return this;
+    }
+
+    public function addHandlers(newHandlers: HandlerRegistry): Niik {
+        for (handlerkey in newHandlers.keys()) {
+            handlerRegistry[handlerkey] = newHandlers[handlerkey];
+        }
+        return this;
+    }
+
+
+    public function bindRulesToDOM() {
+        for (ruleset in rulesets) {
+            trace(ruleset);
+            for (selector in ruleset.selectors) {
+                for (element in document.querySelectorAll(selector)) {
+                    for (rule in ruleset.rules) {
+                            element.addEventListener(rule.eventname, handlerRegistry[rule.funcname]);
+                        trace(handlerRegistry[rule.funcname]);
+                        trace(rule);
+                    }
+                }
+            }
+        }
+    }
+
+    public static function parseCSS(cssString: String) {
+
         var protosplitted = cssString.split("}");
         protosplitted.remove("");
         var parsedRules: Array<CSSRuleset> = protosplitted.map(
@@ -26,7 +82,8 @@ class Niik {
                 var rawselectors = sp.pop();
                 var newSelectors = rawselectors.split(",").map(function(a) return a.replace("\n", "")).map(StringTools.trim);
                 newSelectors.remove("");
-                var newRules = rawrules.split(";").map(function(a) return a.replace("\n", "")).map(StringTools.trim);
+                var newRules = rawrules.split(";").map(function(a) 
+                return a.replace("\n", "").replace("\"", "")).map(StringTools.trim);
                 newRules.remove("");
                 newRules.remove("\n");
 
@@ -42,17 +99,58 @@ class Niik {
                     };
             }
         );
-        trace(parsedRules);
-        return cssString;
-    }
-
-
-    public static function startWithSRC(srcString: String) {
-        window.fetch(srcString)
-            .then(function(a) {return a.text();})
-            .then(function(a) {startWithString(a);});
+        return parsedRules;
     }
 }
 
+typedef HandlerRegistry = Map<String, Event -> Void>;
 typedef CSSRule = {eventname: String, funcname: String};
 typedef CSSRuleset = {selectors: Array<String>, rules: Array<CSSRule>};
+/* 
+class Processor {
+    public static function parseCSS(cssString: String) {
+
+        var protosplitted = cssString.split("}");
+        protosplitted.remove("");
+        var parsedRules: Array<CSSRuleset> = protosplitted.map(
+            function(s: String) {
+                var sp = s.split("{");
+                var rawrules = sp.pop();
+                var rawselectors = sp.pop();
+                var newSelectors = rawselectors.split(",").map(function(a) return a.replace("\n", "")).map(StringTools.trim);
+                newSelectors.remove("");
+                var newRules = rawrules.split(";").map(function(a) 
+                return a.replace("\n", "").replace("\"", "")).map(StringTools.trim);
+                newRules.remove("");
+                newRules.remove("\n");
+
+                var newerRules = newRules.map(
+                    function(s) {
+                        var a = s.replace(" ", "").split(":");
+                        return {funcname: a.pop(), eventname: a.pop()};
+                    }
+                );
+                return {
+                    selectors: newSelectors,
+                    rules: newerRules,
+                    };
+            }
+        );
+        return parsedRules;
+    }
+
+    public static function bindRulesToDOM(rulesets: Array<CSSRuleset>) {
+        for (ruleset in rulesets) {
+            trace(ruleset);
+            for (selector in ruleset.selectors) {
+                for (element in document.querySelectorAll(selector)) {
+                    for (rule in ruleset.rules) {
+                            element.addEventListener(rule.eventname, untyped __js__("window[{0}]", rule.funcname));
+                        trace(untyped __js__("window[{0}]", rule.funcname));
+                        trace(rule);
+                    }
+                }
+            }
+        }
+    }
+} */

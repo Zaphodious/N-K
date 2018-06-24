@@ -5,12 +5,11 @@
     click: testa;
 }
 .test-b button, .test-c button {
-    click: testb;
+    click: "Niik.foo";
 }
 
 .test-e button {
     click: testd;
-    mousemove: testc;
 }
 
 .test-c input {

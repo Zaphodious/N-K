@@ -3,30 +3,30 @@
 <head>
 <meta charset=utf-8>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="niik-standalone.js" data-bindings-src="test-bindings.css"></script>
 <script>
-    function testa(event) {
+    var niik = new Niik()
+    .addHandler("testa", function (event) {
         console.log("thing a was");
         console.log(event);
-    }
-
-    function testb(event) {
+    })
+    .addHandler("testb", function (event) {
         console.log("thing b was");
+        alert("thing a event is " + event);
         console.log(event);
-    }
-
-    function testc(event) {
+    })
+    .addHandler("testc", function (event) {
         console.log("thing c was");
         console.log(event);
-    }
-
-    function testd(event) {
+    })
+    .addHandler("testd", function testd(event) {
         console.log("thing d was");
         console.log(event);
-    }
+    });
+    niik.startWithSRC("test-bindings.css");
 
 </script>
-<script src="niik-standalone.js" data-bindings-src="test-bindings.css"></script>
-<script>Niik.startWithSRC("test-bindings.css");</script>
+<script></script>
 <title>Niik test</title>
 </head>
 <body>
