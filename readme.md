@@ -39,3 +39,7 @@ Valid selectors are any accepted by [querySelector](https://developer.mozilla.or
 #### A note about the "Cascading" bit
 
 Unlike CSS used for styling, properties can have multiple values, and declarations under one selector don't override declarations from another. That is, ```.a button {click:foo;} #b .a button {click:bar;}``` will result in invocations of both foo and bar when the button is clicked.
+
+## Building
+
+Install [Haxe 3.4.7](https://haxe.org/download/version/3.4.7/), run ```haxe build.hxml``` from within the project folder, and the output will be 'build/niik-standalone.js'.
