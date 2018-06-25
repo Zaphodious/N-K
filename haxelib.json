@@ -6,7 +6,7 @@
     "description": "A Haxe/Vanilla JS lib for binding functions to events via CSS",
     "version": "1.0.1",
     "classPath": "src/",
-    "releasenote": "Initial release, everything is working correctly.",
+    "releasenote": "The constructor is now public.",
     "contributors": ["Zaphodious"],
     "dependencies": {}
   }
