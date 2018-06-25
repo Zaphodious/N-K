@@ -1,17 +1,17 @@
 #test-a {
-    mousemove: testa;
+    mousemove: "testa";
 }
 .test-b button {
-    click: testa;
+    click: "testa";
 }
 .test-b button, .test-c button {
-    click: "Niik.foo";
+    click: "niikSample";
 }
 
 .test-e button {
-    click: testd;
+    click: "testd";
 }
 
 .test-c input {
-    input: testc;
+    input: "testc";
 }

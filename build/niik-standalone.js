@@ -84,9 +84,8 @@ Niik.parseCSS = function(cssString) {
 };
 Niik.prototype = {
 	startWithString: function(cssString) {
-		this.rulesets = Niik.parseCSS(cssString);
-		this.bindRulesToDOM();
-		console.log(this.handlerRegistry.toString());
+		this.setCSSRules(cssString);
+		this.addHandlersToChildren(window.document.querySelector("body"));
 		return this;
 	}
 	,startWithSRC: function(srcString) {
@@ -97,7 +96,7 @@ Niik.prototype = {
 			return _gthis.startWithString(a1);
 		});
 	}
-	,addHandler: function(name,fun) {
+	,registerHandler: function(name,fun) {
 		var _this = this.handlerRegistry;
 		if(__map_reserved[name] != null) {
 			_this.setReserved(name,fun);
@@ -106,7 +105,7 @@ Niik.prototype = {
 		}
 		return this;
 	}
-	,addHandlers: function(newHandlers) {
+	,registerHandlers: function(newHandlers) {
 		var handlerkey = newHandlers.keys();
 		while(handlerkey.hasNext()) {
 			var handlerkey1 = handlerkey.next();
@@ -121,7 +120,57 @@ Niik.prototype = {
 		}
 		return this;
 	}
-	,bindRulesToDOM: function() {
+	,addHandlersToElement: function(element) {
+		var _g = 0;
+		var _g1 = this.rulesets;
+		while(_g < _g1.length) {
+			var ruleset = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = ruleset.selectors;
+			while(_g2 < _g3.length) {
+				var selector = _g3[_g2];
+				++_g2;
+				if(element.matches(selector)) {
+					var _g4 = 0;
+					var _g5 = ruleset.rules;
+					while(_g4 < _g5.length) {
+						var rule = _g5[_g4];
+						++_g4;
+						var key = rule.funcname;
+						var _this = this.handlerRegistry;
+						element.addEventListener(rule.eventname,__map_reserved[key] != null ? _this.getReserved(key) : _this.h[key]);
+					}
+				}
+			}
+		}
+		return this;
+	}
+	,removeHandlersFromElement: function(element) {
+		var _g = 0;
+		var _g1 = this.rulesets;
+		while(_g < _g1.length) {
+			var ruleset = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g3 = ruleset.selectors;
+			while(_g2 < _g3.length) {
+				var selector = _g3[_g2];
+				++_g2;
+				var _g4 = 0;
+				var _g5 = ruleset.rules;
+				while(_g4 < _g5.length) {
+					var rule = _g5[_g4];
+					++_g4;
+					var key = rule.funcname;
+					var _this = this.handlerRegistry;
+					element.removeEventListener(rule.eventname,__map_reserved[key] != null ? _this.getReserved(key) : _this.h[key]);
+				}
+			}
+		}
+		return this;
+	}
+	,addHandlersToChildren: function(parent) {
 		var _g = 0;
 		var _g1 = this.rulesets;
 		while(_g < _g1.length) {
@@ -134,7 +183,7 @@ Niik.prototype = {
 				var selector = _g3[_g2];
 				++_g2;
 				var _g4 = 0;
-				var _g5 = window.document.querySelectorAll(selector);
+				var _g5 = parent.querySelectorAll(selector);
 				while(_g4 < _g5.length) {
 					var element = _g5[_g4];
 					++_g4;
@@ -154,6 +203,9 @@ Niik.prototype = {
 				}
 			}
 		}
+	}
+	,setCSSRules: function(cssString) {
+		this.rulesets = Niik.parseCSS(cssString);
 	}
 	,__class__: Niik
 };
@@ -237,25 +289,6 @@ haxe_ds_StringMap.prototype = {
 			}
 		}
 		return out;
-	}
-	,toString: function() {
-		var s_b = "";
-		s_b += "{";
-		var keys = this.arrayKeys();
-		var _g1 = 0;
-		var _g = keys.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var k = keys[i];
-			s_b += k == null ? "null" : "" + k;
-			s_b += " => ";
-			s_b += Std.string(Std.string(__map_reserved[k] != null ? this.getReserved(k) : this.h[k]));
-			if(i < keys.length - 1) {
-				s_b += ", ";
-			}
-		}
-		s_b += "}";
-		return s_b;
 	}
 	,__class__: haxe_ds_StringMap
 };

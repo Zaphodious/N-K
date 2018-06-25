@@ -6,20 +6,20 @@
 <script src="build/niik-standalone.js"></script>
 <script>
     var niik = new Niik()
-    .addHandler("testa", function (event) {
+    .registerHandler("testa", function (event) {
         console.log("thing a was");
         console.log(event);
     })
-    .addHandler("testb", function (event) {
+    .registerHandler("testb", function (event) {
         console.log("thing b was");
         alert("thing a event is " + event);
         console.log(event);
     })
-    .addHandler("testc", function (event) {
+    .registerHandler("testc", function (event) {
         console.log("thing c was");
         console.log(event);
     })
-    .addHandler("testd", function testd(event) {
+    .registerHandler("testd", function testd(event) {
         console.log("thing d was");
         console.log(event);
     });
@@ -30,6 +30,9 @@
 <title>Niik test</title>
 </head>
 <body>
+    <h1>N||k Library proof of concept</h1>
+    <p>Elements on this page have event handlers assigned to them with CSS. Open the devtools console to see the output of these handlers.</p>
+    <p><a href="https://github.com/Zaphodious/NiiK">Github Repo</a></p>
     <p id="test-a">Hello World!</p>
     <div class="test-b"><button type="button">Clickers A!</button><button type="button">Clickers A!</button></div>
     <div class="test-c"><button type="button">Clickers B!</button></div>

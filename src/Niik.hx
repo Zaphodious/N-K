@@ -25,11 +25,8 @@ class Niik {
     private function new() {}
 
     public function startWithString(cssString: String) : Niik {
-        rulesets = Niik.parseCSS(cssString);
-        bindRulesToDOM();
-
-
-        trace(handlerRegistry);
+        setCSSRules(cssString);
+        addHandlersToChildren(document.querySelector("body"));
         return this;
     }
 
@@ -44,12 +41,12 @@ class Niik {
             .then(function(a) {return startWithString(a);});
     }
 
-    public function addHandler(name: String, fun: Event -> Void) : Niik {
+    public function registerHandler(name: String, fun: Event -> Void) : Niik {
         handlerRegistry[name] = fun;
         return this;
     }
 
-    public function addHandlers(newHandlers: HandlerRegistry): Niik {
+    public function registerHandlers(newHandlers: HandlerRegistry): Niik {
         for (handlerkey in newHandlers.keys()) {
             handlerRegistry[handlerkey] = newHandlers[handlerkey];
         }
@@ -80,11 +77,11 @@ class Niik {
         return this;
     }
 
-    public function bindRulesToDOM() {
+    private function addHandlersToChildren(parent: Element) {
         for (ruleset in rulesets) {
             trace(ruleset);
             for (selector in ruleset.selectors) {
-                for (element in document.querySelectorAll(selector)) {
+                for (element in parent.querySelectorAll(selector)) {
                     for (rule in ruleset.rules) {
                             element.addEventListener(rule.eventname, handlerRegistry[rule.funcname]);
                         trace(handlerRegistry[rule.funcname]);
@@ -95,7 +92,11 @@ class Niik {
         }
     }
 
-    public static function parseCSS(cssString: String) {
+    public function setCSSRules(cssString: String) {
+        rulesets = Niik.parseCSS(cssString);
+    }
+
+    private static function parseCSS(cssString: String) {
 
         var protosplitted = cssString.split("}");
         protosplitted.remove("");
