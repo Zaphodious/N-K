@@ -22,7 +22,7 @@ class Niik {
     
     public var rulesets: Array<CSSRuleset> = [];
 
-    private function new() {}
+    public function new() {}
 
     public function startWithString(cssString: String) : Niik {
         setCSSRules(cssString);
