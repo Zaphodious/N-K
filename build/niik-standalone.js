@@ -59,10 +59,14 @@ Niik.foo = function(event) {
 	console.log("foo you too!");
 };
 Niik.parseCSS = function(cssString) {
-	var protosplitted = cssString.split("}");
+	var commentRegEx_r = new RegExp("/\\*.*?\\*/","g".split("u").join(""));
+	var nocomments = cssString.replace(commentRegEx_r,"");
+	var trimmed = StringTools.trim(StringTools.replace(nocomments,"\n",""));
+	console.log(trimmed);
+	var protosplitted = trimmed.split("}");
 	HxOverrides.remove(protosplitted,"");
 	var parsedRules = protosplitted.map(function(s) {
-		var sp = s.split("{");
+		var sp = StringTools.trim(s).split("{");
 		var rawrules = sp.pop();
 		var rawselectors = sp.pop();
 		var newSelectors = rawselectors.split(",").map(function(a) {

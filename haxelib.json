@@ -4,7 +4,7 @@
     "license": "MIT",
     "tags": ["js", "web"],
     "description": "A Haxe/Vanilla JS lib for binding functions to events via CSS",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "classPath": "src/",
     "releasenote": "The constructor is now public.",
     "contributors": ["Zaphodious"],

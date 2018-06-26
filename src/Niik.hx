@@ -97,12 +97,16 @@ class Niik {
     }
 
     private static function parseCSS(cssString: String) {
-
-        var protosplitted = cssString.split("}");
+        
+        var commentRegEx = ~/\/\*.*?\*\//g;
+        var nocomments = commentRegEx.replace(cssString, "");
+        var trimmed = nocomments.replace("\n", "").trim();
+        trace(trimmed);
+        var protosplitted = trimmed.split("}");
         protosplitted.remove("");
         var parsedRules: Array<CSSRuleset> = protosplitted.map(
             function(s: String) {
-                var sp = s.split("{");
+                var sp = s.trim().split("{");
                 var rawrules = sp.pop();
                 var rawselectors = sp.pop();
                 var newSelectors = rawselectors.split(",").map(function(a) return a.replace("\n", "")).map(StringTools.trim);

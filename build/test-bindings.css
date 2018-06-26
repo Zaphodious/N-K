@@ -9,9 +9,13 @@
 }
 
 .test-e button {
-    click: "testd";
+    click: "testd"; /*Test Comment A*/
 }
+
+/* Test Comment B   */
 
 .test-c input {
     input: "testc";
 }
+
+

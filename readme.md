@@ -30,7 +30,7 @@ Undetermined at this point. If its too slow, please submit an issue on this here
 ### Haxe/JS
 Make a new Niik object, add callbacks to it using ``` .registerHandler(namestring, callback) ```, set the rules being used with ```setCSSRules(cssString)```, bind event handlers to a group of nodes with ```addHandlersToChildren(parent)```, to an individual element with ```addHandlersToElement(element)```, and remove handlers from an individual element with ```removeHandlersFromElement(element)```. 
 
-For a simple start, add callbacks with addHandler and then initialize with ``` .startWithString(cssString) ``` (which executes synchroniously and returns the niik object), or ``` .startWithSRC(srcString) ``` (which gets a cssString from a css file located by srcString, and returns a Promise<Niik>) can be used to. Note that the two "startWith" methods have undefined behavior if called more then once in the same document.
+For a simple start, add callbacks with addHandler and then initialize with ``` .startWithString(cssString) ``` (which executes synchroniously and returns the niik object), or ``` .startWithSRC(srcString) ``` (which gets a cssString from a css file located by srcString, and returns a Promise<Niik>). Note that the two "startWith" methods have undefined behavior if called more then once in the same document.
 
 ### CSS
 
